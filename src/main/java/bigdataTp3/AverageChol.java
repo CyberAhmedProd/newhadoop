@@ -43,10 +43,9 @@ public class AverageChol {
 
                 // storing the chol
                 // which is in 2th column
-                if (str[2].matches("\\d+")) {
-                    // storing the person's age in column 7
-                    chol.set(str[2]);
-                }
+
+                    chol.set(str[1]);
+
 
                 // checking for numeric data with
                 // the regular expression in this column
@@ -95,7 +94,7 @@ public class AverageChol {
 
         @SuppressWarnings("deprecation")
         Job job = new Job(conf, "Averageage_chol");
-        job.setJarByClass(AverageAge.class);
+        job.setJarByClass(AverageChol.class);
 
         job.setMapOutputKeyClass(Text.class);
         job.setMapOutputValueClass(IntWritable.class);
@@ -103,8 +102,8 @@ public class AverageChol {
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(IntWritable.class);
 
-        job.setMapperClass(AverageAge.Map.class);
-        job.setReducerClass(AverageAge.Reduce.class);
+        job.setMapperClass(AverageChol.Map.class);
+        job.setReducerClass(AverageChol.Reduce.class);
 
         job.setInputFormatClass(TextInputFormat.class);
         job.setOutputFormatClass(TextOutputFormat.class);
