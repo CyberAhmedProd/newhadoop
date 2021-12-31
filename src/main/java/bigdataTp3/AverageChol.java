@@ -1,5 +1,4 @@
 package bigdataTp3;
-// import libraries
 import java.io.IOException;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.conf.*;
@@ -9,12 +8,12 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
-public class AverageAge {
+public class AverageChol {
     public static class Map extends Mapper<LongWritable, Text, Text, IntWritable> {
 
         // private text gender variable which
-        // stores the gender of the person
-        private Text gender = new Text();
+        // stores the cholesterole of the person
+        private Text chol = new Text();
 
         // private IntWritable variable age will store
         // the age of the person for MapReduce. where
@@ -42,9 +41,13 @@ public class AverageAge {
                in our dataset*/
             if (str.length > 9) {
 
-                // storing the gender
-                // which is in 8th column
-                gender.set(str[8]);
+                // storing the chol
+                // which is in 2th column
+                if (str[2].matches("\\d+")) {
+                    // storing the person's age in column 7
+                    chol.set(str[2]);
+                }
+
                 // checking for numeric data with
                 // the regular expression in this column
                 if (str[7].matches("\\d+")) {
@@ -55,7 +58,7 @@ public class AverageAge {
             }
             // writing key and value to the context
             // which will be output of our map phase
-            context.write(gender, age);
+            context.write(chol, age);
         }
     }
 
@@ -91,18 +94,17 @@ public class AverageAge {
         Configuration conf = new Configuration();
 
         @SuppressWarnings("deprecation")
-        Job job = new Job(conf, "Averageage_diabetes");
+        Job job = new Job(conf, "Averageage_chol");
         job.setJarByClass(AverageAge.class);
 
         job.setMapOutputKeyClass(Text.class);
         job.setMapOutputValueClass(IntWritable.class);
 
-
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(IntWritable.class);
 
-        job.setMapperClass(Map.class);
-        job.setReducerClass(Reduce.class);
+        job.setMapperClass(AverageAge.Map.class);
+        job.setReducerClass(AverageAge.Reduce.class);
 
         job.setInputFormatClass(TextInputFormat.class);
         job.setOutputFormatClass(TextOutputFormat.class);
@@ -114,3 +116,4 @@ public class AverageAge {
         job.waitForCompletion(true);
     }
 }
+
